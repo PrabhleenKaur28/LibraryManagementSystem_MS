@@ -65,24 +65,22 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public boolean deleteIfNoBooks(Long authorId) throws AuthorNotFoundException {
-        // 1️⃣ Fetch author or throw exception
+
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new AuthorNotFoundException("Author not found with id: " + authorId));
 
-        // 2️⃣ Check with BookService if author has any books
         Boolean hasBooks = restTemplate.getForObject(
                 "http://localhost:8080/books/author/{id}/exists",
                 Boolean.class,
                 authorId
         );
 
-        // 3️⃣ Delete author if no books exist
         if (hasBooks != null && !hasBooks) {
             authorRepository.delete(author);
             return true;
         }
 
-        return false; // author has books, no deletion
+        return false;
     }
 
 

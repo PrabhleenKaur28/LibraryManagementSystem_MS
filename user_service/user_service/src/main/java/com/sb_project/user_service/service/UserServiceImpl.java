@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
 
-    // ----------------- GET ALL USERS -----------------
     @Override
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll()
@@ -27,7 +26,6 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    // ----------------- GET USER BY ID -----------------
     @Override
     public UserResponseDTO findById(Long id) {
         User user = userRepository.findById(id)
@@ -35,7 +33,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponseDTO(user);
     }
 
-    // ----------------- ADD NEW USER -----------------
     @Override
     public UserResponseDTO addNewUser(UserRequestDTO request) {
         User user = new User();
@@ -48,7 +45,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponseDTO(savedUser);
     }
 
-    // ----------------- UPDATE EXISTING USER -----------------
     @Override
     public UserResponseDTO updateUser(Long id, UserRequestDTO request) {
         User user = userRepository.findById(id)
@@ -63,7 +59,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponseDTO(savedUser);
     }
 
-    // ----------------- DELETE USER -----------------
     @Override
     public void removeUser(Long id) {
         User user = userRepository.findById(id)
@@ -87,7 +82,6 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    // ----------------- BORROW A BOOK -----------------
     @Override
     public void borrowBook(Long userId, Long bookId) {
         User user = userRepository.findById(userId)
@@ -100,7 +94,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    // ----------------- RETURN A BOOK -----------------
     @Override
     public void returnBook(Long userId, Long bookId) {
         User user = userRepository.findById(userId)
@@ -110,7 +103,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    // ----------------- HELPER: MAP ENTITY TO RESPONSE -----------------
     private UserResponseDTO mapToResponseDTO(User user) {
         List<String> bookTitles;
 

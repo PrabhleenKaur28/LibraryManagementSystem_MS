@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookResponseDTO addNewBook(BookRequestDTO request) {
-        // Validate that authorId is provided
+
         if (request.authorId() == null) {
             throw new RuntimeException("authorId must be provided");
         }
@@ -61,7 +61,7 @@ public class BookServiceImpl implements BookService {
             throw new RuntimeException("authorId must be provided");
         }
 
-        // Update all fields
+
         existingBook.setName(request.name());
         existingBook.setIsbn(request.isbn());
         existingBook.setAuthorId(request.authorId());
@@ -87,7 +87,6 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(book);
 
         try {
-            // Optional cleanup in AuthorService if author has no more books
             restTemplate.delete("http://localhost:8081/authors/{id}/check-and-delete", authorId);
         } catch (RestClientException ignored) {}
     }
@@ -104,7 +103,6 @@ public class BookServiceImpl implements BookService {
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.save(book);
 
-        // ✅ Call UserService with correct path variables
         try {
             restTemplate.postForObject(
                     "http://localhost:8082/users/" + userId + "/borrow/" + bookId,
@@ -123,7 +121,6 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + bookId));
 
-        // ✅ Call UserService with correct path variables
         try {
             restTemplate.postForObject(
                     "http://localhost:8082/users/" + userId + "/return/" + bookId,
@@ -154,7 +151,6 @@ public class BookServiceImpl implements BookService {
     }
 
 
-    /** ---------------- Helper Methods ---------------- **/
 
     private Book mapToEntity(BookRequestDTO request) {
         Book book = new Book();
@@ -173,7 +169,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private BookResponseDTO mapToResponseDTO(Book book) {
-        // Fetch author name for response
+
         String authorName;
         try {
             authorName = restTemplate.getForObject(
